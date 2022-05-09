@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-
+/*
+ * Name: Anna Breuker
+ * Project: Assignment 9
+ * Description: This script has the player move to a goal.
+ */
 public class MoveTo : MonoBehaviour
 {
     public Transform goal;

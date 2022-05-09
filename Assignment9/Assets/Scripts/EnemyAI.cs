@@ -6,13 +6,15 @@ using UnityStandardAssets.Characters.ThirdPerson;
 /*
  * Name: Anna Breuker
  * Project: Assignment 9
- * Description: This script controls the player.
+ * Description: This script controls the enemy.
  */
-public class PlayerController : MonoBehaviour
+public class EnemyAI : MonoBehaviour
 {
     public Camera cam;
     public NavMeshAgent agent;
     public ThirdPersonCharacter character;
+    public GameObject player;
+    public float chaseDistance;
 
     // Start is called before the first frame update
     void Start()
@@ -21,29 +23,30 @@ public class PlayerController : MonoBehaviour
         cam = Camera.main;
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = false;
+        player = GameObject.FindGameObjectWithTag("Player");
+        chaseDistance = 8.0f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        MoveEnemy();
+
+    }
+
+    private void MoveEnemy()
+    {
+        float distanceFromTarget = Vector3.Distance(transform.position, player.transform.position);
+        
+        if (distanceFromTarget > agent.stoppingDistance && distanceFromTarget < chaseDistance)
         {
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
-            {
-                agent.destination = hit.point;
-            }
-        }
-        if (agent.remainingDistance > agent.stoppingDistance)
-        {
+            agent.SetDestination(player.transform.position);
             character.Move(agent.desiredVelocity, false, false);
         }
         else
         {
+            agent.SetDestination(transform.position);
             character.Move(Vector3.zero, false, false);
         }
-
-
     }
 }
